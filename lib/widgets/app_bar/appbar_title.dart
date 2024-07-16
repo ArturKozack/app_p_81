@@ -1,31 +1,43 @@
+import 'package:app_p_81/widgets/app_bar/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import '../../core/app_export.dart'; 
-class AppbarTitle extends StatelessWidget {
-  AppbarTitle({Key? key, required this.text, this.margin, this.onTap})
-      : super(
-          key: key,
-        );
+import 'package:app_p_81/core/app_export.dart';
 
-final  String text;
+class AppbarTitle extends CustomAppBar {
+  final String text;
+  final bool implyLeading;
 
-final  EdgeInsetsGeometry? margin;
-
- final Function? onTap;
+  AppbarTitle({
+    Key? key,
+    required this.text,
+    this.implyLeading = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        onTap?.call();
-      },
-      child: Padding(
-        padding: margin ?? EdgeInsets.zero,
-        child: Text(
-          text,
-          style: CustomTextStyles.headlineLargeGray50.copyWith(
-            color: appTheme.gray50,
-          ),
-        ),
+    return CustomAppBar(
+      leadingWidth: 40.h,
+      leading: implyLeading
+          ? InkWell(
+              onTap: () => Navigator.pop(context),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 16.h,
+                  top: 20.v,
+                  bottom: 20.v,
+                ),
+                child: CustomImageView(
+                  imagePath: ImageConstant.imgArrowLeft,
+                  height: 24.adaptSize,
+                  width: 24.adaptSize,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            )
+          : null,
+      centerTitle: true,
+      title: Text(
+        text,
+        style: theme.textTheme.titleLarge!,
       ),
     );
   }

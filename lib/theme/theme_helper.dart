@@ -63,6 +63,13 @@ class ThemeHelper {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: appTheme.gray50,
       ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        backgroundColor: appTheme.lightBlueA700,
+        type: BottomNavigationBarType.fixed,
+        elevation: 0,
+      ),
     );
   }
 

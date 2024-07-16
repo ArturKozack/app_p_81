@@ -9,47 +9,39 @@ class ImageConstant {
 // Preloader images
   static String imgImage696x414 = '$imagePath/img_image_696x414.png';
 
-  static String imgContrast = '$imagePath/img_contrast.svg';
-
-// Add images
-  static String imgRadioButtons = '$imagePath/img_radio_buttons.svg';
-
-  static String imgRadioButtonsGreenA700 =
-      '$imagePath/img_radio_buttons_green_a700.svg';
-
   static String imgIconsToday24px = '$imagePath/img_icons_today24px.svg';
 
 // Settings images
-  static String imgSettings = '$imagePath/img_settings.svg';
+  static String edit = '$imagePath/edit.svg';
 
-  static String imgEdit = '$imagePath/img_edit.svg';
+  static String save = '$imagePath/save.svg';
 
   static String imgArrowRight = '$imagePath/img_arrow_right.svg';
 
-  static String imgNavigationBarVariant5BlueGray900 =
-      '$imagePath/img_navigation_bar_variant5_blue_gray_900.svg';
-
 // Common images
+  static String home = '$imagePath/home.svg';
+
+  static String homeActive = '$imagePath/home_active.svg';
+
+  static String subscriptions = '$imagePath/subscriptions.svg';
+
+  static String subscriptionsActive = '$imagePath/subscriptions_active.svg';
+
+  static String calendar = '$imagePath/calendar.svg';
+
+  static String calendarActive = '$imagePath/calendar_active.svg';
+
+  static String settings = '$imagePath/settings.svg';
+
+  static String settingsActive = '$imagePath/settings_active.svg';
+
   static String imgArrowLeft = '$imagePath/img_arrow_left.svg';
-
-  static String imgLock = '$imagePath/img_lock.svg';
-
-  static String imgSubscriptions = '$imagePath/img_subscriptions.svg';
-
-  static String imgCalendar = '$imagePath/img_calendar.svg';
-
-  static String imgSettingsGray50 = '$imagePath/img_settings_gray_50.svg';
-
-  static String imgImage46x46 = '$imagePath/img_image_46x46.png';
-
-  static String imgHomeGray50 = '$imagePath/img_home_gray_50.svg';
-
-  static String imgHome = '$imagePath/img_home.svg';
 
   static String imgSearch = '$imagePath/img_search.svg';
 
-  static String imgNavigationBarVariant5 =
-      '$imagePath/img_navigation_bar_variant5.svg';
-
   static String imageNotFound = 'assets/images/image_not_found.png';
+
+  static String addAvatar = 'assets/images/add_avatar.svg';
+
+  static String user = '$imagePath/user.svg';
 }

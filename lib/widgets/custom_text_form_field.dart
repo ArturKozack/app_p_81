@@ -1,34 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../core/app_export.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  CustomTextFormField(
-      {Key? key,
-      this.alignment,
-      this.width,
-      this.scrollPadding,
-      this.controller,
-      this.focusNode,
-      this.autofocus = false,
-      this.textStyle,
-      this.obscureText = false,
-      this.textInputAction = TextInputAction.next,
-      this.textInputType = TextInputType.text,
-      this.maxLines,
-      this.hintText,
-      this.hintStyle,
-      this.prefix,
-      this.prefixConstraints,
-      this.suffix,
-      this.suffixConstraints,
-      this.contentPadding,
-      this.borderDecoration,
-      this.fillColor,
-      this.filled = true,
-      this.validator})
-      : super(
-          key: key,
-        );
+  CustomTextFormField({
+    Key? key,
+    this.alignment,
+    this.width,
+    this.scrollPadding,
+    this.controller,
+    this.focusNode,
+    this.autofocus = false,
+    this.textStyle,
+    this.obscureText = false,
+    this.textInputAction = TextInputAction.next,
+    this.textInputType = TextInputType.text,
+    this.maxLines,
+    this.hintText,
+    this.hintStyle,
+    this.prefix,
+    this.prefixConstraints,
+    this.suffix,
+    this.suffixConstraints,
+    this.contentPadding,
+    this.borderDecoration,
+    this.fillColor,
+    this.filled = true,
+    this.enabled = true,
+    this.textAlign = TextAlign.start,
+    this.validator,
+    this.inputFormatters,
+    this.onChanged,
+  }) : super(key: key);
 
   final Alignment? alignment;
 
@@ -72,7 +75,15 @@ class CustomTextFormField extends StatelessWidget {
 
   final bool? filled;
 
+  final bool enabled;
+
+  final TextAlign textAlign;
+
   final FormFieldValidator<String>? validator;
+
+  final List<TextInputFormatter>? inputFormatters;
+
+  void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +97,10 @@ class CustomTextFormField extends StatelessWidget {
   Widget textFormFieldWidget(BuildContext context) => SizedBox(
         width: width ?? double.maxFinite,
         child: TextFormField(
-          scrollPadding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          enabled: enabled,
+          scrollPadding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
           controller: controller,
           focusNode: focusNode,
           onTapOutside: (event) {
@@ -105,6 +118,9 @@ class CustomTextFormField extends StatelessWidget {
           maxLines: maxLines ?? 1,
           decoration: decoration,
           validator: validator,
+          inputFormatters: inputFormatters,
+          textAlign: textAlign,
+          onChanged: onChanged,
         ),
       );
   InputDecoration get decoration => InputDecoration(
@@ -112,7 +128,14 @@ class CustomTextFormField extends StatelessWidget {
         hintStyle: hintStyle ?? CustomTextStyles.bodyLargePrimary,
         prefixIcon: prefix,
         prefixIconConstraints: prefixConstraints,
-        suffixIcon: suffix,
+        suffixIcon: Padding(
+          padding: contentPadding ??
+              EdgeInsets.symmetric(
+                horizontal: 8.h,
+                vertical: 22.v,
+              ),
+          child: suffix,
+        ),
         suffixIconConstraints: suffixConstraints,
         isDense: true,
         contentPadding: contentPadding ??

@@ -1,281 +1,128 @@
+import 'package:app_p_81/core/models/category_type/category_type.dart';
+import 'package:app_p_81/core/models/payments/payments.dart';
+import 'package:app_p_81/core/repositories/main_repository.dart';
+import 'package:app_p_81/presentation/calendar_page/widgets/calendar_widget.dart';
+import 'package:app_p_81/presentation/calendar_page/widgets/payment_list_view.dart';
+import 'package:app_p_81/presentation/subscriptions_page/widgets/category_filter_panel.dart';
+import 'package:app_p_81/widgets/app_bar/appbar_title.dart';
 import 'package:flutter/material.dart';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
-import '../../core/app_export.dart'; // ignore_for_file: must_be_immutable
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:app_p_81/core/app_export.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key})
-      : super(
-          key: key,
-        );
+  const CalendarPage({Key? key}) : super(key: key);
 
   @override
   CalendarPageState createState() => CalendarPageState();
 }
-// ignore_for_file: must_be_immutable
 
-// ignore_for_file: must_be_immutable
-class CalendarPageState extends State<CalendarPage>
-    with AutomaticKeepAliveClientMixin<CalendarPage> {
-  List<DateTime?> selectedDatesFromCalendar = [];
+class CalendarPageState extends State<CalendarPage> {
+  late AppLocalizations _localizations;
+
+  CategoryType _selectedCategory = CategoryType.all;
+  DateTime _selectedDate = DateTime.now();
 
   @override
-  bool get wantKeepAlive => true;
+  void didChangeDependencies() {
+    _localizations = AppLocalizations.of(context)!;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SizedBox(
-          width: double.maxFinite,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: 22.v),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: Column(
-                    children: [
-                      _buildCalendarColumn(context),
-                      SizedBox(height: 20.v),
-                      _buildMainColumn(context),
-                      SizedBox(height: 8.v),
-                      _buildNavigationBar(context)
-                    ],
-                  ),
-                )
-              ],
+        appBar: AppbarTitle(
+          text: _localizations.calendar,
+        ),
+        body: Column(
+          children: [
+            CategoryFilterPanel(
+              selectedCategory: _selectedCategory,
+              onSelected: (category) =>
+                  setState(() => _selectedCategory = category),
             ),
-          ),
+            SizedBox(height: 8.v),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.h),
+                child: CalendarWidget(
+                  selectedDate: _selectedDate,
+                  onSelectDate: (date) => setState(() => _selectedDate = date),
+                ),
+              ),
+            ),
+            SizedBox(height: 20.v),
+            Expanded(
+              child: _buildActiveSubscriptions(),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  /// Section Widget
-  Widget _buildCalendarWidget(BuildContext context) {
-    return SizedBox(
-      height: 404.v,
-      width: 360.h,
-      child: CalendarDatePicker2(
-        config: CalendarDatePicker2Config(
-          calendarType: CalendarDatePicker2Type.single,
-          firstDate: DateTime(DateTime.now().year - 5),
-          lastDate: DateTime(DateTime.now().year + 5),
-          selectedDayHighlightColor: Color(0XFF1ABA5E),
-          centerAlignModePicker: true,
-          firstDayOfWeek: 0,
-          controlsHeight: 24,
-          weekdayLabelTextStyle: TextStyle(
-            color: theme.colorScheme.primary,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
-          ),
-          selectedDayTextStyle: TextStyle(
-            color: Color(0XFFF8F8F8),
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
-          ),
-          controlsTextStyle: TextStyle(
-            color: theme.colorScheme.primary,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w400,
-          ),
-          dayTextStyle: TextStyle(
-            color: appTheme.blueGray900,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
-          ),
-          disabledDayTextStyle: TextStyle(
-            color: appTheme.blueGray900,
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
-          ),
-          weekdayLabels: ["S", "M", "T", "W", "T", "F", "S"],
-          dayBorderRadius: BorderRadius.circular(
-            20.h,
-          ),
+  Widget _buildHeadline() {
+    return Container(
+      height: 50.v,
+      padding: EdgeInsets.symmetric(horizontal: 20.h),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          _localizations.activeSubscriptions,
+          style: CustomTextStyles.titleLargeGray50,
         ),
-        value: selectedDatesFromCalendar,
-        onValueChanged: (dates) {},
       ),
     );
   }
 
-  /// Section Widget
-  Widget _buildCalendarColumn(BuildContext context) {
+  Widget _buildActiveSubscriptions() {
     return Container(
-      width: double.maxFinite,
-      margin: EdgeInsets.symmetric(horizontal: 20.h),
-      padding: EdgeInsets.symmetric(horizontal: 6.h),
-      child: Column(
-        children: [_buildCalendarWidget(context)],
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildHeadlineColumn(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      margin: EdgeInsets.symmetric(horizontal: 20.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Active subscriptions",
-            style: CustomTextStyles.titleLargeGray50,
-          )
-        ],
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildTitleColumn(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      padding: EdgeInsets.symmetric(horizontal: 14.h),
-      child: Column(
-        children: [
-          Text(
-            "There is no payment scheduled for this day",
-            style: CustomTextStyles.bodyLargeOnPrimary,
-          )
-        ],
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildMainColumn(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
       decoration: AppDecoration.fillLightBlueA.copyWith(
         borderRadius: BorderRadiusStyle.customBorderBL20,
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: 16.v),
-          _buildHeadlineColumn(context),
-          SizedBox(height: 14.v),
-          Container(
-            width: double.maxFinite,
-            padding: EdgeInsets.symmetric(
-              horizontal: 20.h,
-              vertical: 54.v,
-            ),
-            decoration: AppDecoration.fillGray200.copyWith(
-              borderRadius: BorderRadiusStyle.customBorderBL20,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [_buildTitleColumn(context), SizedBox(height: 82.v)],
-            ),
-          )
-        ],
-      ),
-    );
-  }
+          _buildHeadline(),
+          Expanded(
+            child: Container(
+              width: double.maxFinite,
+              decoration: AppDecoration.fillGray200.copyWith(
+                borderRadius: BorderRadiusStyle.customBorderBL20,
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: 16.h,
+              ),
+              child: ValueListenableBuilder(
+                valueListenable: MainRepository.paymentBox.listenable(),
+                builder: (context, box, child) {
+                  final List<PaymentModel> payments =
+                      MainRepository.filteredPayments(
+                    _selectedDate,
+                    _selectedCategory,
+                  );
 
-  /// Section Widget
-  Widget _buildNavigationBar(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 8.h,
-        vertical: 12.v,
-      ),
-      decoration: AppDecoration.accentprimary1,
-      width: double.maxFinite,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: _buildSubscriptionsSegment(
-              context,
-              dynamicImage: ImageConstant.imgHome,
-              dynamicText: "Home",
-            ),
-          ),
-          Expanded(
-            child: _buildSubscriptionsSegment(
-              context,
-              dynamicImage: ImageConstant.imgSubscriptions,
-              dynamicText: "Subscriptions",
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 4.v),
-              child: _buildSettingsSegment(
-                context,
-                searchImage: ImageConstant.imgCalendar,
-                settingsText: "Calendar",
+                  return payments.isNotEmpty
+                      ? PaymentListView(
+                          payments: payments,
+                        )
+                      : Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.h,
+                            ),
+                            child: Text(
+                              _localizations.thereIsNoPayment,
+                              style: CustomTextStyles.bodyLargeOnPrimary,
+                            ),
+                          ),
+                        );
+                },
               ),
             ),
           ),
-          Expanded(
-            child: _buildSettingsSegment(
-              context,
-              searchImage: ImageConstant.imgSearch,
-              settingsText: "Settings",
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  /// Common widget
-  Widget _buildSubscriptionsSegment(
-    BuildContext context, {
-    required String dynamicImage,
-    required String dynamicText,
-  }) {
-    return Opacity(
-      opacity: 0.3,
-      child: Column(
-        children: [
-          CustomImageView(
-            imagePath: dynamicImage,
-            height: 24.adaptSize,
-            width: 24.adaptSize,
-          ),
-          SizedBox(height: 8.v),
-          Text(
-            dynamicText,
-            textAlign: TextAlign.center,
-            style: CustomTextStyles.bodySmallGray50.copyWith(
-              color: appTheme.gray50,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  /// Common widget
-  Widget _buildSettingsSegment(
-    BuildContext context, {
-    required String searchImage,
-    required String settingsText,
-  }) {
-    return Opacity(
-      opacity: 0.3,
-      child: Column(
-        children: [
-          CustomImageView(
-            imagePath: searchImage,
-            height: 32.adaptSize,
-            width: 32.adaptSize,
-          ),
-          SizedBox(height: 4.v),
-          Text(
-            settingsText,
-            textAlign: TextAlign.center,
-            style: CustomTextStyles.bodySmallGray50.copyWith(
-              color: appTheme.gray50,
-            ),
-          )
         ],
       ),
     );

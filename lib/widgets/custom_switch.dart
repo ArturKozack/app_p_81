@@ -1,21 +1,20 @@
 import 'package:flutter/cupertino.dart';
-import '../core/app_export.dart'; 
+import 'package:app_p_81/core/app_export.dart';
+
 class CustomSwitch extends StatelessWidget {
-  CustomSwitch(
-      {Key? key,
-      required this.onChange,
-      this.alignment,
-      this.value,
-      this.width,
-      this.height,
-      this.margin})
-      : super(
-          key: key,
-        );
+  CustomSwitch({
+    Key? key,
+    required this.onChange,
+    this.alignment,
+    this.value,
+    this.width,
+    this.height,
+    this.margin,
+  }) : super(key: key);
 
   final Alignment? alignment;
 
- final bool? value;
+  final bool? value;
 
   final Function(bool) onChange;
 
@@ -28,13 +27,13 @@ class CustomSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: height,
-        width: width,
-        margin: margin,
-        child: alignment != null
-            ? Align(
-                alignment: alignment ?? Alignment.center, child: switchWidget)
-            : switchWidget);
+      height: height,
+      width: width,
+      margin: margin,
+      child: alignment != null
+          ? Align(alignment: alignment ?? Alignment.center, child: switchWidget)
+          : switchWidget,
+    );
   }
 
   Widget get switchWidget => CupertinoSwitch(
@@ -43,9 +42,7 @@ class CustomSwitch extends StatelessWidget {
         thumbColor: (value ?? false)
             ? appTheme.whiteA700
             : theme.colorScheme.onPrimaryContainer,
-        activeColor: appTheme.green600,
-        onChanged: (value) {
-          onChange(value);
-        },
+        activeColor: appTheme.lightBlueA700,
+        onChanged: (value) => onChange(value),
       );
 }

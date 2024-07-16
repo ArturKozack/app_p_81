@@ -1,74 +1,79 @@
+import 'package:app_p_81/core/models/category_type/category_type.dart';
+import 'package:app_p_81/core/repositories/main_repository.dart';
+import 'package:app_p_81/presentation/subscriptions_page/widgets/category_filter_panel.dart';
+import 'package:app_p_81/widgets/add_subscription_button.dart';
+import 'package:app_p_81/presentation/subscriptions_page/widgets/subscription_list_view.dart';
+import 'package:app_p_81/widgets/app_bar/appbar_title.dart';
 import 'package:flutter/material.dart';
-import '../../core/app_export.dart'; // ignore_for_file: must_be_immutable
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:app_p_81/core/app_export.dart';
 
 class SubscriptionsPage extends StatefulWidget {
-  const SubscriptionsPage({Key? key})
-      : super(
-          key: key,
-        );
+  const SubscriptionsPage({Key? key}) : super(key: key);
 
   @override
   SubscriptionsPageState createState() => SubscriptionsPageState();
 }
 
-class SubscriptionsPageState extends State<SubscriptionsPage>
-    with AutomaticKeepAliveClientMixin<SubscriptionsPage> {
+class SubscriptionsPageState extends State<SubscriptionsPage> {
+  late AppLocalizations _localizations;
+
+  CategoryType _selectedCategory = CategoryType.all;
+
   @override
-  bool get wantKeepAlive => true;
+  void didChangeDependencies() {
+    _localizations = AppLocalizations.of(context)!;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final subscriptions = MainRepository.subscriptions
+        .where((e) =>
+            (_selectedCategory == CategoryType.all) ||
+            (e.category == _selectedCategory))
+        .toList();
+
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.all(16.h),
-          decoration: AppDecoration.fillGray,
-          child: Column(
-            children: [
-              SizedBox(height: 242.v),
-              _buildSubscriptionInfo(context)
-            ],
-          ),
+        appBar: AppbarTitle(
+          text: _localizations.subscriptions,
         ),
+        body: Column(
+          children: [
+            CategoryFilterPanel(
+              selectedCategory: _selectedCategory,
+              onSelected: (category) =>
+                  setState(() => _selectedCategory = category),
+            ),
+            Expanded(
+              child: subscriptions.isEmpty
+                  ? _buildEmptySubscriptions(context)
+                  : SubscriptionListView(
+                      subscriptions: subscriptions,
+                    ),
+            ),
+          ],
+        ),
+        floatingActionButton: AddSubscriptionButton(),
       ),
     );
   }
 
-  /// Section Widget
-  Widget _buildSubscriptionInfo(BuildContext context) {
-    return SizedBox(
-      width: double.maxFinite,
+  Widget _buildEmptySubscriptions(BuildContext context) {
+    return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "You have no current subscriptions",
+            _localizations.youHaveNoCurrentSubscriptions,
             style: CustomTextStyles.bodyLargeOnPrimary,
           ),
-          SizedBox(height: 6.v),
+          SizedBox(height: 8.v),
           Text(
-            "You can add one now",
+            _localizations.youCanAddOneNow,
             style: CustomTextStyles.bodySmallSecondaryContainer,
           ),
-          SizedBox(height: 272.v),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              height: 56.v,
-              width: 56.h,
-              decoration: AppDecoration.outlineBlackC.copyWith(
-                borderRadius: BorderRadiusStyle.roundedBorder20,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    "+",
-                    style: CustomTextStyles.headlineLargeGray50Medium,
-                  )
-                ],
-              ),
-            ),
-          )
         ],
       ),
     );

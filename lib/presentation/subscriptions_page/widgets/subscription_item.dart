@@ -5,8 +5,7 @@ import 'package:app_p_81/core/models/subscription/subscription.dart';
 import 'package:app_p_81/core/repositories/main_repository.dart';
 import 'package:app_p_81/core/utils/extensions.dart';
 import 'package:app_p_81/core/utils/subscription_utils.dart';
-import 'package:app_p_81/presentation/subscription_details_page/subscription_details_page.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:app_p_81/presentation/subscriptions_page/widgets/subscription_actions_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -49,6 +48,7 @@ class SubscriptionItem extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
+                    flex: 2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,6 +56,8 @@ class SubscriptionItem extends StatelessWidget {
                         Text(
                           subscription.name,
                           style: theme.textTheme.bodyLarge,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                         Text(
                           localizations.startDate +
@@ -66,11 +68,16 @@ class SubscriptionItem extends StatelessWidget {
                       ],
                     ),
                   ),
-                  payment == null
-                      ? _buildPriceWidget()
-                      : _PaymentStatusCheckbox(
-                          payment: payment!,
-                        ),
+                  SizedBox(
+                    width: 8.h,
+                  ),
+                  Expanded(
+                    child: payment == null
+                        ? _buildPriceWidget()
+                        : _PaymentStatusCheckbox(
+                            payment: payment!,
+                          ),
+                  ),
                 ],
               ),
             )
@@ -88,6 +95,8 @@ class SubscriptionItem extends StatelessWidget {
         Text(
           "\$" + subscription.amount.format,
           style: theme.textTheme.bodyLarge,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
         Text(
           subscription.type.suffix,
@@ -98,53 +107,10 @@ class SubscriptionItem extends StatelessWidget {
   }
 
   void _showActionSheet(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
-    showCupertinoModalPopup<void>(
+    showDialog<String>(
       context: context,
-      builder: (context) => CupertinoActionSheet(
-        title: Text(
-          localizations.makeChanges,
-          style: CustomTextStyles.bodySmallBluegray900,
-        ),
-        message: Text(
-          localizations.makeChangesDescription,
-          style: CustomTextStyles.bodySmallBluegray900,
-        ),
-        actions: <CupertinoActionSheetAction>[
-          CupertinoActionSheetAction(
-            child: Text(
-              localizations.edit,
-              style: CustomTextStyles.bodyLargeMontserratLightblueA700,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SubscriptionDetailsPage(
-                    subscription: subscription,
-                  ),
-                ),
-              );
-            },
-          ),
-          CupertinoActionSheetAction(
-            child: Text(
-              localizations.delete,
-              style: CustomTextStyles.bodyLargeMontserratRed500,
-            ),
-            onPressed: () =>
-                MainRepository.deleteSubscription(context, subscription.id),
-          ),
-          CupertinoActionSheetAction(
-            child: Text(
-              localizations.cancel,
-              style: CustomTextStyles.bodyLargeMontserratLightblueA700,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
+      builder: (_) => SubscriptionActionsDialog(
+        subscription: subscription,
       ),
     );
   }

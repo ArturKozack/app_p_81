@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 import 'base_button.dart';
 
-class CustomOutlinedButton extends BaseButton {
-  CustomOutlinedButton(
+class CustomTextButton extends BaseButton {
+  CustomTextButton(
       {Key? key,
       this.decoration,
       this.leftIcon,
@@ -52,7 +52,7 @@ class CustomOutlinedButton extends BaseButton {
         width: this.width ?? double.maxFinite,
         margin: margin,
         decoration: decoration,
-        child: OutlinedButton(
+        child: TextButton(
           style: buttonStyle,
           onPressed: isDisabled ?? false ? null : onPressed ?? () {},
           child: Row(

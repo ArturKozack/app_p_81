@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
       width: double.maxFinite,
       padding: EdgeInsets.symmetric(vertical: 20.v),
       decoration: AppDecoration.fillLightBlueA.copyWith(
-        borderRadius: BorderRadiusStyle.customBorderBL20,
+        borderRadius: BorderRadiusStyle.customBorderB20,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -160,7 +160,7 @@ class HomePage extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: 36.h,
+        horizontal: 16.h,
         vertical: 6.v,
       ),
       decoration: AppDecoration.fillGray.copyWith(
@@ -168,7 +168,6 @@ class HomePage extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: 4.v),
@@ -183,6 +182,8 @@ class HomePage extends StatelessWidget {
             style: theme.textTheme.headlineLarge!.copyWith(
               color: appTheme.blueGray900,
             ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           )
         ],
       ),

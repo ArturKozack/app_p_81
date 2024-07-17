@@ -63,9 +63,14 @@ class AppDecoration {
 
 class BorderRadiusStyle {
   // Custom borders
-  static BorderRadius get customBorderBL20 => BorderRadius.only(
+  static BorderRadius get customBorderT20 => BorderRadius.only(
         topLeft: Radius.circular(20.h),
         topRight: Radius.circular(20.h),
+      );
+
+  static BorderRadius get customBorderB20 => BorderRadius.only(
+        bottomLeft: Radius.circular(20.h),
+        bottomRight: Radius.circular(20.h),
       );
 // Rounded borders
   static BorderRadius get roundedBorder20 => BorderRadius.circular(

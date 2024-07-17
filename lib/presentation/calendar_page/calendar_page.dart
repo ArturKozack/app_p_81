@@ -80,7 +80,7 @@ class CalendarPageState extends State<CalendarPage> {
   Widget _buildActiveSubscriptions() {
     return Container(
       decoration: AppDecoration.fillLightBlueA.copyWith(
-        borderRadius: BorderRadiusStyle.customBorderBL20,
+        borderRadius: BorderRadiusStyle.customBorderT20,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -90,7 +90,7 @@ class CalendarPageState extends State<CalendarPage> {
             child: Container(
               width: double.maxFinite,
               decoration: AppDecoration.fillGray200.copyWith(
-                borderRadius: BorderRadiusStyle.customBorderBL20,
+                borderRadius: BorderRadiusStyle.customBorderT20,
               ),
               padding: EdgeInsets.symmetric(
                 vertical: 16.h,

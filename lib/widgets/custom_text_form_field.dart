@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../core/app_export.dart';
+import 'package:app_p_81/core/app_export.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  CustomTextFormField({
+  const CustomTextFormField({
     Key? key,
     this.alignment,
     this.width,
@@ -83,7 +83,7 @@ class CustomTextFormField extends StatelessWidget {
 
   final List<TextInputFormatter>? inputFormatters;
 
-  void Function(String)? onChanged;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {

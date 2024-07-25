@@ -59,6 +59,10 @@ jobs:
     - name: Restore the main dependencies
       run: flutter pub get
 
+    - name: Restore the localization
+      run: flutter gen-l10n
+
+
     - name: Clear App version
       uses: mad9000/actions-find-and-replace-string@2
       id: findandreplace

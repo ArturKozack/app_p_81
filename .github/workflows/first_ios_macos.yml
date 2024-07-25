@@ -76,6 +76,9 @@ jobs:
     - name: Restore the main dependencies
       run: flutter pub get
 
+    - name: Restore the localization
+      run: flutter gen-l10n
+      
     # Build and sign the ipa using a single flutter command
     - name: Building IPA
       run: flutter build ipa --release --obfuscate --split-debug-info=build/debug_info --export-options-plist=ios/ExportOptions.AppStore.plist --build-number "${{ env.BUILD_NUMBER }}" --build-name="${{ env.APP_VERSION }}"

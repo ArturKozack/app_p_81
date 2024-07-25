@@ -1,4 +1,4 @@
-package com.app_p_eighty_one.app
+package com.controlsubscritptions.org
 
 import io.flutter.embedding.android.FlutterActivity
 

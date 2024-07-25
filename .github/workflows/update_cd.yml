@@ -1,0 +1,80 @@
+name: Build update aab
+
+on:
+  push:
+    tags:
+      - 'sssss'
+
+  workflow_dispatch:
+
+jobs:
+
+  pre_build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+      id: previoustag
+      with:
+          fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
+       
+    - name: Find current version
+      id: version
+      uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      with:
+        fallback: and.1.0.0 # Optional fallback tag to use when no tag can be found
+
+    - name: Set version
+      run: echo "APP_VERSION=${{ steps.version.outputs.tag }}" >> $GITHUB_ENV
+
+    - name: Set build number
+      env:
+        RUN_NUMBER: ${{ github.run_number }}
+      run: |
+        echo "BUILD_NUMBER=$RUN_NUMBER" >> $GITHUB_ENV
+
+    - uses: actions/setup-java@v1.3.0
+      with:
+          java-version: '17.x'
+      env: 
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      
+    - uses: akiojin/decode-base64-github-action@v0.1.0
+      id: decode-base64
+      with:
+        base64: ${{ secrets.MARKET_CERT_BASE64 }}
+        output-path: /home/runner/work/app_p_81/app_p_81/android/upload-keystore.jks
+
+    - name: Create key.properties
+      run: echo '${{ secrets.KEY_PROPERTIES }}' > /home/runner/work/app_p_81/app_p_81/android/key.properties
+
+    - name: Install Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        flutter-version: 3.22.2
+
+    - name: Restore the main dependencies
+      run: flutter pub get
+
+    - name: Clear App version
+      uses: mad9000/actions-find-and-replace-string@2
+      id: findandreplace
+      with:
+        source: ${{ env.APP_VERSION }}
+        find: 'and.'        
+        replace: ''
+
+    - name: Build Android AAB
+      run: flutter build appbundle --obfuscate --split-debug-info=build/debug_info --build-number "${{ env.BUILD_NUMBER }}" --build-name="${{ steps.findandreplace.outputs.value }}"
+        
+    - name: Create GitHub release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "/home/runner/work/app_p_81/app_p_81/build/app/outputs/mapping/release/mapping.txt,/home/runner/work/app_p_81/app_p_81/build/app/outputs/bundle/release/app-release.aab"
+        name: "${{ env.APP_VERSION }}"
+        tag: "${{ env.APP_VERSION }}"

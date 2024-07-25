@@ -8,7 +8,7 @@ enum SettingsItemType {
   notification,
   privacyPolicy,
   shareApp,
-  termsOfUse,
+
   clearCache,
 }
 
@@ -24,8 +24,7 @@ extension SettingsItemTypeExtension on SettingsItemType {
         return localizations.privacyPolicy;
       case SettingsItemType.shareApp:
         return localizations.shareApp;
-      case SettingsItemType.termsOfUse:
-        return localizations.termsOfUse;
+
       case SettingsItemType.clearCache:
         return localizations.clearData;
     }
@@ -38,8 +37,7 @@ extension SettingsItemTypeExtension on SettingsItemType {
     switch (this) {
       case SettingsItemType.privacyPolicy:
         return localizations.loremIpsum;
-      case SettingsItemType.termsOfUse:
-        return localizations.loremIpsum;
+
       default:
         return '';
     }

@@ -53,7 +53,6 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MaterialApp(
           theme: theme,
-          title: 'app_p_81',
           debugShowCheckedModeBanner: false,
           initialRoute:
               isFirstLogin ? AppRoutes.onboardingPage : AppRoutes.rootPage,
